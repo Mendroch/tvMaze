@@ -12,7 +12,14 @@ body {
 }
 
 .search-bar {
+  display: flex;
+  justify-content: space-between;
   margin: 30px 0;
+}
+
+.btn-open-favorite {
+  border: none;
+  border-radius: 5px;
 }
 
 .shows-wrapper  .card {

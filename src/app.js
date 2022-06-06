@@ -8,6 +8,8 @@ class TvMaze {
         this.selectedName = ""
         this.showData = ""
         this.showsList
+        this.favoriteOpen = false
+        this.favoriteRemove = false
         this.initializeApp()
         this.getShowsList()
     }
@@ -28,6 +30,7 @@ class TvMaze {
         this.showNameButtons = mapListToDOMElements(listOfShowNames, 'data-show-name')
         this.viewElems.searchInput.addEventListener('keydown', this.handleSubmit)
         this.viewElems.searchButton.addEventListener('click', this.handleSubmit)
+        this.viewElems.favoriteButton.addEventListener('click', this.openFavorite)
         this.viewElems.shadowDetailsView.addEventListener('click', this.closeDetailsView)
     }
 
@@ -47,10 +50,11 @@ class TvMaze {
             this.selectedName = this.viewElems.searchInput.value
             this.fetchAndDisplayShows()
         }
+        this.favoriteOpen = false
     }
 
     fetchAndDisplayShows = () => {
-        getShowsByKey(this.selectedName).then(shows => this.renderCardsOnList(shows))
+        getShowsByKey(this.selectedName).then(shows => this.renderCardsOnList(shows, false))
     }
 
     // getShowById(show.id).then(show => {
@@ -58,16 +62,24 @@ class TvMaze {
     // })
     ////////////////////////////////////////  ^^ zapytanie o obsade
 
-    renderCardsOnList = shows => {
+    renderCardsOnList = (shows, isFavorite) => {
         Array.from (
             document.querySelectorAll('[data-show-id]')
         ).forEach(btn => btn.removeEventListener('click', this.openDetailsView))
         this.viewElems.showsWrapper.innerHTML = ""
+        
+        if (!isFavorite) {
+            for (const { show } of shows) {     // { show } <-- odwołuje się do konkretnego elementu
+                // getShowById(show.id).then(show => console.log(show))
+                const card = this.createShowCard(show)
+                this.viewElems.showsWrapper.appendChild(card)
+            }
+        }   else {
 
-        for (const { show } of shows) {     // { show } <-- odwołuje się do konkretnego elementu
-            // getShowById(show.id).then(show => console.log(show))
-            const card = this.createShowCard(show)
-            this.viewElems.showsWrapper.appendChild(card)
+            for (const show of shows) {
+                const card = this.createShowCard(show)
+                this.viewElems.showsWrapper.appendChild(card)
+            }
         }
     }
 
@@ -79,6 +91,10 @@ class TvMaze {
         closeBtn.removeEventListener('click', this.closeDetailsView)
         this.viewElems.showPreview.style.display = 'none'
         this.viewElems.showPreview.innerHTML = ''
+
+        if (this.favoriteOpen && this.favoriteRemove) {
+            this.openFavorite()
+        }
     }
 
     openDetailsView = event => {
@@ -213,16 +229,20 @@ class TvMaze {
         return description
     }
 
+    openFavorite = () => {
+        this.favoriteOpen = true
+        this.renderCardsOnList(this.showsList, true)
+    }
+
     checkInFavorite = () => {
         for (let show of this.showsList) {
-
             if (show.id === this.showData.id) {
                 this.btnFavorite.classList.add('btn-favorite-check')
                 this.btnFavorite.addEventListener('click', this.removeFromFavorite)
-            } else {
-                this.btnFavorite.addEventListener('click', this.addToFavorite)            
+                return
             }
         }
+        this.btnFavorite.addEventListener('click', this.addToFavorite) 
     }
 
     addToFavorite = () => {
@@ -230,6 +250,7 @@ class TvMaze {
         this.btnFavorite.addEventListener('click', this.removeFromFavorite)
 
         this.btnFavorite.classList.add('btn-favorite-check')
+        this.favoriteRemove = false
 
         this.showsList.push(this.showData)
         localStorage.setItem('showsList', JSON.stringify(this.showsList));
@@ -240,13 +261,16 @@ class TvMaze {
         this.btnFavorite.addEventListener('click', this.addToFavorite)
 
         this.btnFavorite.classList.remove('btn-favorite-check')
+        this.favoriteRemove = true
 
+        let i = 0
         for (let show of this.showsList) {
             if (show.id === this.showData.id) {
-                console.log(this.showsList.indexOf(this.showData))
-                this.showsList.splice(this.showsList.indexOf(this.showData), 1)
+
+                this.showsList.splice(i, 1)
                 localStorage.setItem('showsList', JSON.stringify(this.showsList));
             }
+            i++
         }
     }
 
