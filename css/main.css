@@ -17,6 +17,7 @@ body {
 
 .shows-wrapper  .card {
   float: left;
+  height: 556px;
   width: 24%;
   margin: 0 .5% 1% .5%;
 }
