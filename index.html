@@ -8,9 +8,14 @@
   <title>TV Maze</title>
 </head>
 <body>
-  <div class="container">
+  <div id="shadowDetailsView"></div>
+  <div id="container" class="container">
     <div class="search-bar">
-      <div class="dropdown">
+      <div>
+        <input type="text" id="searchInput" class="searchInput" placeholder="Search">
+        <button id="searchButton" class="searchButton">search</button>
+    </div>
+      <!-- <div class="dropdown">
         <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Most popular keywords
         </button>
@@ -21,7 +26,7 @@
           <button class="dropdown-item" data-show-name="fun">fun</button>
           <button class="dropdown-item" data-show-name="happy">happy</button>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <div class="show-preview" id="showPreview">

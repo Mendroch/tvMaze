@@ -20,4 +20,4 @@ export const createDOMElem = (tagName, className, innerText, src) => {
     if (src) tag.src = src
 
     return tag
-}
+} 

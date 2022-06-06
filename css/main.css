@@ -1,43 +1,105 @@
+*, *::after, *::before {
+  box-sizing: border-box;
+}
+
 body {
-    margin: 50px 0;
-  }
+  margin: 50px 0;
+}
   
-  .search-bar {
-    margin: 30px 0;
-  }
+.stop-scrolling {
+  height: 100%;
+  overflow: hidden;
+}
+
+.search-bar {
+  margin: 30px 0;
+}
+
+.shows-wrapper  .card {
+  float: left;
+  width: 24%;
+  margin: 0 .5% 1% .5%;
+}
   
-  .shows-wrapper {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-  }
+.show-preview {
+  position: fixed;
+  left: 50%;
+  top: 5%;
+  display: none;
+  width: 90%;
+  max-width: 1100px;
+  height: 90%;
+  background: white;
+  transform: translate(-50%, 0);
+  z-index: 1;
+  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.3);
+}
   
-  .shows-wrapper .card {
-    width: 24%;
-    margin-bottom: 1.5%;
-  }
+.show-preview .card {
+  height: 100%;
+}
   
-  .show-preview {
-    position: fixed;
-    left: 50%;
-    top: 5%;
-    display: none;
-    width: 90%;
-    max-width: 1100px;
-    height: 90%;
-    background: white;
-    transform: translate(-50%, 0);
-    z-index: 1;
-    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.3);
-  }
-  
-  .show-preview .card {
-    height: 100%;
-  }
-  
-  .card-preview-bg {
-    width: 100%;
-    height: 45%;
-    background-position: center;
-    background-size: cover;
-  }
+.card-preview-bg {
+  width: 100%;
+  height: 45%;
+  background-position: center;
+  background-size: cover;
+}
+
+.card-flex {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card-style {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-title-style {
+  margin-top: 10px;
+}
+
+.card-interactions {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.btn-favorite {
+  width: 32px;
+  height: 32px;
+  background: url('../img/star.png') center center / cover no-repeat;
+  border: none;
+}
+
+.btn-favorite-check {
+  background: url('../img/star2.png') center center / cover no-repeat;
+}
+
+.btn-favorite:focus, .btn-x:focus {
+  outline: none;
+}
+
+.btn-x {
+  width: 25px;
+  height: 25px;
+  background: url('../img/close.png') center center / cover no-repeat;
+  border: none;
+}
+
+.btn-show-close {
+  width: 120px;
+  margin: 0 0 20px 20px;
+}
+
+.shadowDeatails {
+  position: fixed;
+  top: 0;
+  z-index: 1;
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+  opacity: 60%;
+}
