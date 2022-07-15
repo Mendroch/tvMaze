@@ -8,8 +8,11 @@ class TvMaze {
         this.selectedName = ""
         this.showData = ""
         this.showsList
+        this.showsOficialList = [];
         this.favoriteOpen = false
         this.favoriteRemove = false
+        this.current_page = 1
+        this.rows = 8
         this.initializeApp()
         this.getShowsList()
     }
@@ -67,25 +70,30 @@ class TvMaze {
             document.querySelectorAll('[data-show-id]')
         ).forEach(btn => btn.removeEventListener('click', this.openDetailsView))
         this.viewElems.showsWrapper.innerHTML = ""
+        this.showsOficialList = []
         
         if (!isFavorite) {
             for (const { show } of shows) {     // { show } <-- odwołuje się do konkretnego elementu
                 // getShowById(show.id).then(show => console.log(show))
-                const card = this.createShowCard(show)
-                this.viewElems.showsWrapper.appendChild(card)
+                this.showsOficialList.push(show)
+                // const card = this.createShowCard(show)
+                // this.viewElems.showsWrapper.appendChild(card)
             }
         }   else {
 
             for (const show of shows) {
-                const card = this.createShowCard(show)
-                this.viewElems.showsWrapper.appendChild(card)
+                this.showsOficialList.push(show)
+                // const card = this.createShowCard(show)
+                // this.viewElems.showsWrapper.appendChild(card)
             }
         }
+        this.current_page = 1
+        this.createPagination()
     }
 
     closeDetailsView = event => {
         shadowDetailsView.classList.remove("shadowDeatails")
-        document.body.classList.remove("stop-scrolling");
+        document.body.classList.remove("stop-scrolling")
         const { showId } = event.target.dataset
         const closeBtn = document.querySelector(`[id="showPreview"] [data-show-id="${showId}"]`)
         closeBtn.removeEventListener('click', this.closeDetailsView)
@@ -276,10 +284,67 @@ class TvMaze {
 
     getShowsList = () => {
         if (localStorage.getItem('showsList')) {
-            this.showsList = JSON.parse(localStorage.getItem('showsList'));
+            this.showsList = JSON.parse(localStorage.getItem('showsList'))
         } else {
-            this.showsList = [];
+            this.showsList = []
         }
+    }
+
+    // Paginacja
+
+    DisplayList = (items, rows_per_page, page) => {
+        this.viewElems.showsWrapper.innerHTML = ""
+        page--
+
+        let start = rows_per_page * page
+        let end = start + rows_per_page
+        let paginatedItems = items.slice(start, end)
+
+        for (let i = 0; i < paginatedItems.length; i++) {
+            const card = this.createShowCard(paginatedItems[i])
+            this.viewElems.showsWrapper.appendChild(card)
+        }
+    }
+
+    SetupPagination = (items, wrapper, rows_per_page) => {
+        wrapper.innerHTML = "";
+
+        let page_count = Math.ceil(items.length / rows_per_page)
+        for (let i = 1; i < page_count + 1; i++) {
+            let btn = this.PaginationButton(i, items)
+            wrapper.appendChild(btn)
+        }
+    }
+
+    changeCurrentPage = (page) => {
+        this.current_page = page
+    }
+
+    PaginationButton = (page, items) => {
+        let button = document.createElement('button')
+        let rows = this.rows
+        const DisplayList = this.DisplayList
+        const changeCurrentPage = this.changeCurrentPage
+        button.innerText = page
+
+        if (this.current_page == page) button.classList.add('active')
+
+        button.addEventListener('click', function () {
+            changeCurrentPage(page)
+            DisplayList(items, rows, page)
+
+            let current_btn = document.querySelector('.pagenumbers button.active')
+            current_btn.classList.remove('active')
+
+            button.classList.add('active')
+        });
+
+        return button
+    }
+
+    createPagination = () => {
+        this.DisplayList(this.showsOficialList, this.rows, this.current_page)
+        this.SetupPagination(this.showsOficialList, pagination, this.rows)
     }
 }
 
